@@ -1,1 +1,3 @@
-export { renderInferno } from './middleware/render'
+import { renderInferno } from './middleware/render'
+
+export const middleware = [renderInferno]

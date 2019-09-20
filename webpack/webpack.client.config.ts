@@ -5,7 +5,7 @@ import * as CompressionPlugin from 'compression-webpack-plugin'
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { WebpackConfig } from '../types/webpack-config'
 
-export const clientConfig = (env: WebpackConfig) => {
+export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
   const { path, mode, target } = env
   const _dev_ = mode === 'development'
   const _prod_ = mode === 'production'
@@ -70,7 +70,10 @@ export const clientConfig = (env: WebpackConfig) => {
     },
     plugins: [
       _dev_ && new webpack.HotModuleReplacementPlugin(),
-      _prod_ && new CompressionPlugin(),
+      _prod_ &&
+        new CompressionPlugin({
+          exclude: /\.map$/
+        }),
       new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         // all options are optional

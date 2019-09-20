@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
-import fs from 'fs'
-import chalk from 'chalk'
-import path from 'path'
-import express from 'express'
-import expressGzip from 'express-static-gzip'
+import * as fs from 'fs'
+import * as chalk from 'chalk'
+import * as path from 'path'
+import * as express from 'express'
+import * as expressGzip from 'express-static-gzip'
 // @ts-ignore
 import { middleware, preloadAll } from '../dist/server/server'
 import { compose } from 'compose-middleware'

@@ -60,7 +60,7 @@ app.use(
       res.locals.clientStats = buildDevStats(clientStats.compilation, 'client')
       res.locals.serverStats = buildDevStats(serverStats.compilation, 'server')
 
-      compose(bundle.renderInferno)(req, res, next)
+      compose(bundle.middleware)(req, res, next)
     }
 
     next()

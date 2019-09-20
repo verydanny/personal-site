@@ -7,8 +7,6 @@ export const renderInferno = (req: Request, res: Response) => {
   const entrypoint = entry.main
   const hotUpdateRegex = /.*\.hot-update.*\.js$/
 
-  console.log(entrypoint)
-
   res.send(`
     <!doctype html>
       <head>
