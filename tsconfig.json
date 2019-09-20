@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2018",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "isolatedModules": false,
     "jsx": "preserve",
@@ -18,6 +18,12 @@
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
 		"noImplicitAny": true,
-		"strictFunctionTypes": false
-  }
+    "strictFunctionTypes": false,
+    "lib": [
+      "dom"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
