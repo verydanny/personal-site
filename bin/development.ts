@@ -48,26 +48,6 @@ const middleware = universalMiddleware(clientConfigMerged, serverConfigMerged, {
 app.use(middleware)
 
 app.use(
-  '*',
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    if (res.locals.universal && res.locals.universal.bundle) {
-      const { clientStats, serverStats } = res.locals.universal.compilation
-      const bundle = res.locals.universal.bundle
-      // middleware is the name of my server entryPoint export
-      // aka ./src/server/entry.ts
-      // middleware is an array of my middleware, including the react
-      // renderer. This allows for hot-swapping middleware
-      res.locals.clientStats = buildDevStats(clientStats.compilation, 'client')
-      res.locals.serverStats = buildDevStats(serverStats.compilation, 'server')
-
-      compose(bundle.middleware)(req, res, next)
-    }
-
-    next()
-  }
-)
-
-app.use(
   (
     _req: express.Request,
     res: express.Response,
@@ -83,6 +63,54 @@ app.use(
     next()
   }
 )
+
+app.use(
+  '*',
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (res.locals.universal && res.locals.universal.bundle) {
+      const app = res.locals.universal.bundle.default
+      const rendered = app.render()
+      const publicPath = res.locals.clientStats.publicPath
+      const clientEntryJs: string[] = res.locals.clientStats.entry.main.js
+
+      res.send(
+        `<!doctype html>
+        <html>
+          <head>
+            <title>Svelte Site</title>
+          </head>
+          <body>
+            <div class="app-container">${rendered.html}</div>
+            ${clientEntryJs
+              .map(
+                script =>
+                  `<script type="application/javascript" src="${publicPath}${script}"></script>`
+              )
+              .join('')}
+          </body>
+        </html>`
+      )
+    }
+    next()
+  }
+)
+
+// app.use(
+//   (
+//     _req: express.Request,
+//     res: express.Response,
+//     next: express.NextFunction
+//   ) => {
+//     if (res.locals.universal && res.locals.universal.compilation) {
+//       const { clientStats, serverStats } = res.locals.universal.compilation
+
+//       res.locals.clientStats = buildDevStats(clientStats.compilation, 'client')
+//       res.locals.serverStats = buildDevStats(serverStats.compilation, 'server')
+//     }
+
+//     next()
+//   }
+// )
 
 const bottomsep = '═'
 const separator = process.platform !== 'win32' ? '━' : '-'

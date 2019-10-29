@@ -1,13 +1,10 @@
 import * as webpack from 'webpack'
-import { resolve } from 'path'
-import transformInferno from 'ts-transform-inferno'
-import transformClasscat from 'ts-transform-classcat'
+import * as path from 'path'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
-import { UniversalStatsPlugin } from './transform-stats'
 
 import { WebpackConfig } from '../types/webpack-config'
 
-export const sharedConfig = (env: WebpackConfig) => {
+export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
   const { mode, target } = env
   const _client_ = target === 'client'
   const _server_ = target === 'server'
@@ -26,22 +23,27 @@ export const sharedConfig = (env: WebpackConfig) => {
         ? 'cheap-module-eval-source-map'
         : 'source-map',
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
       alias: {
-        ...(_dev_ && {
-          inferno: resolve(
-            __dirname,
-            '../node_modules/inferno/dist/index.dev.esm.js'
-          ),
-          'inferno-server': resolve(
-            __dirname,
-            '../node_modules/inferno-server/dist/index.dev.esm.js'
-          )
-        })
-      }
+        svelte: path.resolve('node_modules', 'svelte')
+      },
+      extensions: ['.mjs', '.js', '.svelte', '.ts']
     },
     module: {
       rules: [
+        {
+          test: /\.(html|svelte)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'svelte-loader',
+            options: {
+              hotReload: _client_,
+              emitCss: _client_,
+              hydratable: _client_,
+              generate: _client_ ? 'dom' : 'ssr',
+              preprocess: require('svelte-preprocess')
+            }
+          }
+        },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
@@ -50,13 +52,10 @@ export const sharedConfig = (env: WebpackConfig) => {
               loader: 'ts-loader',
               options: {
                 // disable type checker - we will use it in fork plugin
-                transpileOnly: true,
-                getCustomTransformers: () => ({
-                  before: [transformClasscat(), transformInferno()]
-                })
+                transpileOnly: true
               }
             }
-          ].filter(Boolean)
+          ]
         }
       ]
     },
@@ -75,11 +74,7 @@ export const sharedConfig = (env: WebpackConfig) => {
             : JSON.stringify('development')
         }
       }),
-      new CleanWebpackPlugin(),
-      new UniversalStatsPlugin({
-        env: target,
-        module: false
-      })
+      new CleanWebpackPlugin()
     ].filter(Boolean)
   } as webpack.Configuration
 }

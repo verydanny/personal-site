@@ -1,29 +1,20 @@
 {
   "compilerOptions": {
     "target": "es2018",
-    "module": "commonjs",
     "moduleResolution": "node",
-    "isolatedModules": false,
-    "jsx": "preserve",
     "importHelpers": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "declaration": true,
     "removeComments": true,
-    "noEmitHelpers": true,
-    "noLib": false,
     "outDir": "lib/",
-    "preserveConstEnums": true,
     "downlevelIteration": true,
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
 		"noImplicitAny": true,
     "strictFunctionTypes": false,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": false,
     "lib": [
       "dom"
     ]
-  },
-  "exclude": [
-    "node_modules"
-  ]
+  }
 }

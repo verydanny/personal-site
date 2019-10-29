@@ -87,21 +87,21 @@ function buildStats(
         }
 
         for (const module of modulesInCurrentChunk) {
-          if (module.rawRequest) {
+          if (module.userRequest) {
             moduleArray.push({
               id: module.id,
-              name: module.rawRequest,
+              name: module.userRequest,
               chunkGroupFiles,
               files
             })
           }
           if (
-            !module.rawRequest &&
+            !module.userRequest &&
             module.constructor.name === 'ConcatenatedModule'
           ) {
             moduleArray.push({
               id: module.id,
-              name: module.rootModule.rawRequest,
+              name: module.rootModule.userRequest,
               chunkGroupFiles,
               files
             })
@@ -112,19 +112,19 @@ function buildStats(
 
     if (env === 'server') {
       for (const module of modules) {
-        if (module.rawRequest) {
+        if (module.userRequest) {
           moduleArray.push({
             id: module.id,
-            name: module.rawRequest
+            name: module.userRequest
           })
         }
         if (
-          !module.rawRequest &&
+          !module.userRequest &&
           module.constructor.name === 'ConcatenatedModule'
         ) {
           moduleArray.push({
             id: module.id,
-            name: module.rootModule.rawRequest
+            name: module.rootModule.userRequest
           })
         }
       }
