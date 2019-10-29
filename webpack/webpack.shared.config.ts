@@ -40,7 +40,11 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
               emitCss: _client_,
               hydratable: _client_,
               generate: _client_ ? 'dom' : 'ssr',
-              preprocess: require('svelte-preprocess')
+              preprocess: require('svelte-preprocess')({
+                typescript: {
+                  transpileOnly: true
+                }
+              })
             }
           }
         },
