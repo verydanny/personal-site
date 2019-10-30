@@ -2,7 +2,7 @@ import * as webpack from 'webpack'
 import { resolve } from 'path'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import CompressionPlugin from 'compression-webpack-plugin'
-// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { WebpackConfig } from '../types/webpack-config'
 
 export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
@@ -68,6 +68,7 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
         new CompressionPlugin({
           exclude: /\.map$/
         }),
+      _prod_ && new BundleAnalyzerPlugin(),
       new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         // all options are optional

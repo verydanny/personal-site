@@ -11,10 +11,9 @@ module.exports = {
   ],
   extends: [
     'eslint:recommended',
-    'prettier',
+    'prettier'
   ],
-  settings: {
-  },
+  settings: {},
   env: {
     browser: true,
     es6: true,

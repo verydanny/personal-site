@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "PORT=8080 ts-node -T --compiler-options '{\"module\":\"commonjs\"}' bin/development.ts",
     "prod": "ts-node -T --compiler-options '{\"module\":\"commonjs\"}' bin/production.ts",
-    "start": "PORT=8080 ts-node -T --compiler-options '{\"module\":\"commonjs\"}' bin/start.ts"
+    "start": "PORT=8080 ts-node -T --compiler-options '{\"module\":\"commonjs\"}' bin/start.ts",
+    "lint": "yarn eslint --ext .jsx,.js,.ts,.tsx src"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.0",
