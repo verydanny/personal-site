@@ -6,11 +6,15 @@ easy it is to configure it for other libraries besides React.
 
 ### Tech
 
-- *Svelte*
-- *Webpack*
-- *Hot Module Reloading (server and client)*
+- **Svelte**
+- **TypeScript**
+- **ESLint**
+- **Webpack**
+- **Hot Module Reloading (server and client)**
+- **Editor syntax highlighting and auto-completion**
 
 ### Todo
 
-- [] Routing
-- [] Code Splitting
+- [ ] **Routing**
+- [ ] **Code Splitting**
+- [ ] **SCSS**
