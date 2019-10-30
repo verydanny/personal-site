@@ -41,7 +41,6 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
               emitCss: _client_,
               hydratable: _client_,
               generate: _client_ ? 'dom' : 'ssr',
-              dev: _dev_,
               preprocess: require('svelte-preprocess')({
                 typescript: {
                   transpileOnly: true
