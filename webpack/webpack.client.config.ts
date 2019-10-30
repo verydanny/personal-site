@@ -1,7 +1,7 @@
 import * as webpack from 'webpack'
 import { resolve } from 'path'
-import * as MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import * as CompressionPlugin from 'compression-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import CompressionPlugin from 'compression-webpack-plugin'
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { WebpackConfig } from '../types/webpack-config'
 

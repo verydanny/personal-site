@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import * as fs from 'fs'
 import * as path from 'path'
-import * as express from 'express'
-import * as expressGzip from 'express-static-gzip'
+import express from 'express'
+import expressGzip from 'express-static-gzip'
 import chalk from 'chalk'
 import { compose } from 'compose-middleware'
 

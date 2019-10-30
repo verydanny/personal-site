@@ -25,7 +25,12 @@ export function render(
             ${entryString
               .map(
                 script =>
-                  `<script type="application/javascript" src="${publicPath}${script}"></script>`
+                  html`
+                    <script
+                      type="application/javascript"
+                      src="${publicPath}${script}"
+                    ></script>
+                  `
               )
               .join('')}
           </body>

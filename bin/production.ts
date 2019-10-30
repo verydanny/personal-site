@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import * as webpackMerge from 'webpack-merge'
+import webpackMerge from 'webpack-merge'
 import { universalCompiler } from 'webpack-universal-compiler'
 
 import { sharedConfig } from '../webpack/webpack.shared.config'

@@ -11,8 +11,8 @@
 		"noUnusedLocals": true,
 		"noImplicitAny": true,
     "strictFunctionTypes": false,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "dom"
     ]
