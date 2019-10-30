@@ -4,6 +4,7 @@ import { resolve } from 'path'
 import * as webpackMerge from 'webpack-merge'
 import { universalMiddleware } from 'webpack-universal-compiler'
 import { compose } from 'compose-middleware'
+import { render } from './render'
 import { buildDevStats } from '../webpack/transform-stats'
 
 import { sharedConfig } from '../webpack/webpack.shared.config'
@@ -68,29 +69,15 @@ app.use(
   '*',
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (res.locals.universal && res.locals.universal.bundle) {
-      const app = res.locals.universal.bundle.default
-      const rendered = app.render()
-      const publicPath = res.locals.clientStats.publicPath
-      const clientEntryJs: string[] = res.locals.clientStats.entry.main.js
-
-      res.send(
-        `<!doctype html>
-        <html>
-          <head>
-            <title>Svelte Site</title>
-          </head>
-          <body>
-            <div class="app-container">${rendered.html}</div>
-            ${clientEntryJs
-              .map(
-                script =>
-                  `<script type="application/javascript" src="${publicPath}${script}"></script>`
-              )
-              .join('')}
-          </body>
-        </html>`
+      const renderer = render(
+        res.locals.universal.bundle.default,
+        res.locals.clientStats.publicPath,
+        res.locals.clientStats.entry.main.js
       )
+
+      compose(renderer)(req, res, next)
     }
+
     next()
   }
 )

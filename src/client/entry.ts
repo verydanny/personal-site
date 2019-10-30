@@ -1,4 +1,4 @@
-import App from '../app/components/app/app'
+import App from '../app/components/app/app.svelte'
 
 new App({
   target: document.querySelector('.app-container'),

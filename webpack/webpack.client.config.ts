@@ -4,7 +4,6 @@ import * as MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import * as CompressionPlugin from 'compression-webpack-plugin'
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { WebpackConfig } from '../types/webpack-config'
-import { UniversalStatsPlugin } from './transform-stats'
 
 export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
   const { path, mode, target } = env
@@ -21,7 +20,7 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
       path: resolve(path, 'client/'),
       filename: _prod_ ? `${target}.[hash].js` : `${target}.js`,
       publicPath: '/assets/',
-      chunkFilename: _prod_ ? '[name].[id].[hash].js' : '[name].[id].js',
+      chunkFilename: _prod_ ? '[name].[id].[hash:4].js' : '[name].[id].js',
       pathinfo: _prod_,
       hotUpdateMainFilename: 'hot-update.json',
       hotUpdateChunkFilename: '[id].hot-update.js'
@@ -65,11 +64,6 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
     },
     plugins: [
       _dev_ && new webpack.HotModuleReplacementPlugin(),
-      _prod_ &&
-        new UniversalStatsPlugin({
-          env: target,
-          module: false
-        }),
       _prod_ &&
         new CompressionPlugin({
           exclude: /\.map$/

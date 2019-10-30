@@ -1,61 +1,43 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 import * as fs from 'fs'
-import * as chalk from 'chalk'
 import * as path from 'path'
 import * as express from 'express'
 import * as expressGzip from 'express-static-gzip'
-// @ts-ignore
-import { middleware, preloadAll } from '../dist/server/server'
+import chalk from 'chalk'
 import { compose } from 'compose-middleware'
+
+import { render } from './render'
+// @ts-ignore
+import bundle from '../dist/server/server'
 
 const PORT = process.env.PORT
 const app = express()
-
-const composed = compose(middleware)
 
 const clientStats = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '../dist/client/stats.json'), 'utf-8')
 )
 
-const serverStats = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, '../dist/server/stats.json'), 'utf-8')
-)
-
-const { publicPath } = clientStats
-
-app.use(
-  (
-    _req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    res.locals.clientStats = clientStats
-    res.locals.serverStats = serverStats
-
-    next()
-  }
-)
-
-app.use(composed)
+const { publicPath, entry } = clientStats
+const renderer = render(bundle, publicPath, entry.main.js)
 
 app.use(publicPath, expressGzip(path.resolve(__dirname, '../dist/client'), {}))
 
-preloadAll().then(() => {
-  const bottomsep = '═'
-  const separator = process.platform !== 'win32' ? '━' : '-'
+app.use(compose(renderer))
 
-  app.listen(PORT, () => {
-    const label =
-      chalk.bgCyan.black(' 🌐 SERVER UP ') +
-      chalk.cyan(` http://localhost:${PORT}/`)
+const bottomsep = '═'
+const separator = process.platform !== 'win32' ? '━' : '-'
 
-    console.log(
-      '\n',
-      chalk.dim.bold(`${bottomsep.repeat(50)}`),
-      '\n',
-      label,
-      '\n',
-      chalk.dim(`${separator.repeat(50)}\n`)
-    )
-  })
+app.listen(PORT, () => {
+  const label =
+    chalk.bgCyan.black(' 🌐 SERVER UP ') +
+    chalk.cyan(` http://localhost:${PORT}/`)
+
+  console.log(
+    '\n',
+    chalk.dim.bold(`${bottomsep.repeat(50)}`),
+    '\n',
+    label,
+    '\n',
+    chalk.dim(`${separator.repeat(50)}\n`)
+  )
 })

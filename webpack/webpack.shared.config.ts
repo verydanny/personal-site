@@ -1,6 +1,7 @@
 import * as webpack from 'webpack'
 import * as path from 'path'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import { UniversalStatsPlugin } from './transform-stats'
 
 import { WebpackConfig } from '../types/webpack-config'
 
@@ -71,6 +72,11 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
       providedExports: _prod_
     },
     plugins: [
+      _prod_ &&
+        new UniversalStatsPlugin({
+          env: target,
+          module: false
+        }),
       new webpack.DefinePlugin({
         'process.env': {
           NODE_ENV: _prod_
