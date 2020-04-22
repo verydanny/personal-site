@@ -1,5 +1,6 @@
 import * as webpack from 'webpack'
 import * as path from 'path'
+import autoPreprocess from 'svelte-preprocess'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import { UniversalStatsPlugin } from './transform-stats'
 
@@ -37,12 +38,13 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
           use: {
             loader: 'svelte-loader',
             options: {
+              hotReload: true,
               emitCss: true,
               hydratable: true,
               generate: _client_ ? 'dom' : 'ssr',
-              preprocess: require('svelte-preprocess')({
+              preprocess: autoPreprocess({
                 typescript: {
-                  transpileOnly: true,
+                  transpileOnly: _dev_,
                 },
               }),
             },

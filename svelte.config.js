@@ -1,7 +1,7 @@
+const preprocess = require('svelte-preprocess')
+
 module.exports = {
   preprocess: require('svelte-preprocess')({
-    typescript: {
-      module: 'commonjs',
-    },
+    preprocess: [preprocess()],
   }),
 }

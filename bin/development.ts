@@ -13,17 +13,17 @@ import { serverConfig } from '../webpack/webpack.server.config'
 
 const env = {
   mode: 'development',
-  path: resolve(process.cwd(), 'dist')
+  path: resolve(process.cwd(), 'dist'),
 } as const
 
 const clientEnv = {
   ...env,
-  target: 'client' as const
+  target: 'client' as const,
 }
 
 const serverEnv = {
   ...env,
-  target: 'server' as const
+  target: 'server' as const,
 }
 
 const PORT = process.env.PORT
