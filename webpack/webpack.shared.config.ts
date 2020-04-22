@@ -22,7 +22,7 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
         ? 'inline-source-map'
         : _dev_ && _client_
         ? 'cheap-module-eval-source-map'
-        : 'source-map',
+        : false,
     resolve: {
       alias: {
         svelte: path.resolve('node_modules', 'svelte'),
@@ -69,7 +69,7 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
             _client_ && {
               loader: MiniCssExtractPlugin.loader,
               options: {
-                sourceMap: true,
+                sourceMap: _dev_,
                 hmr: mode === 'development',
                 esModule: _client_,
               },
@@ -77,13 +77,13 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
             {
               loader: 'css-loader',
               options: {
-                sourceMap: true,
+                sourceMap: _dev_,
               },
             },
             {
               loader: 'postcss-loader',
               options: {
-                sourceMap: true,
+                sourceMap: _dev_,
                 ident: 'postcss',
                 plugins: (): any[] => [require('cssnano')()],
               },
@@ -91,7 +91,7 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
             {
               loader: 'sass-loader',
               options: {
-                sourceMap: true,
+                sourceMap: _dev_,
               },
             },
           ].filter(Boolean),
