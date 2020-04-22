@@ -7,6 +7,7 @@ import chalk from 'chalk'
 import { compose } from 'compose-middleware'
 
 import { render } from './render'
+import { cacheCss } from './cacheCss'
 // @ts-ignore
 import bundle from '../dist/server/server'
 
@@ -18,11 +19,15 @@ const clientStats = JSON.parse(
 )
 
 const { publicPath, entry } = clientStats
-const renderer = render(bundle, publicPath, entry.main.js)
 
-app.use(publicPath, expressGzip(path.resolve(__dirname, '../dist/client'), {}))
-
-app.use(compose(renderer))
+cacheCss(entry.main.css).then((css) => {
+  const renderer = render(bundle, publicPath, entry, css)
+  app.use(
+    publicPath,
+    expressGzip(path.resolve(__dirname, '../dist/client'), {})
+  )
+  app.use(compose(renderer))
+})
 
 const bottomsep = '═'
 const separator = process.platform !== 'win32' ? '━' : '-'

@@ -11,6 +11,8 @@ import { sharedConfig } from '../webpack/webpack.shared.config'
 import { clientConfig } from '../webpack/webpack.client.config'
 import { serverConfig } from '../webpack/webpack.server.config'
 
+import { cacheCss } from './cacheCss'
+
 const env = {
   mode: 'development',
   path: resolve(process.cwd(), 'dist'),
@@ -69,13 +71,20 @@ app.use(
   '*',
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (res.locals.universal && res.locals.universal.bundle) {
-      const renderer = render(
-        res.locals.universal.bundle.default,
-        res.locals.clientStats.publicPath,
-        res.locals.clientStats.entry
-      )
+      const entryCssPath = res?.locals?.clientStats?.entry?.main?.css
+      const publicPath = res?.locals?.clientStats?.publicPath
+      const clientStatsEntry = res?.locals?.clientStats?.entry
 
-      compose(renderer)(req, res, next)
+      cacheCss(entryCssPath, res).then((css) => {
+        const renderer = render(
+          res.locals.universal.bundle.default,
+          publicPath,
+          clientStatsEntry,
+          css
+        )
+
+        compose(renderer)(req, res, next)
+      })
     } else {
       next()
     }

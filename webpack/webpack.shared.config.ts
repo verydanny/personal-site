@@ -18,10 +18,8 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
     name: target,
     mode,
     devtool:
-      _dev_ && _server_
+      (_dev_ && _server_) || (_prod_ && _server_)
         ? 'inline-source-map'
-        : _prod_ && _server_
-        ? 'source-map'
         : _dev_ && _client_
         ? 'cheap-module-eval-source-map'
         : 'source-map',
@@ -66,18 +64,28 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
         },
         {
           // For CSS modules
-          test: /\.css$/i,
+          test: /\.s?(c|a)?css$/i,
           exclude: /node_modules/,
           use: [
             _client_ && {
               loader: MiniCssExtractPlugin.loader,
               options: {
+                sourceMap: true,
                 hmr: mode === 'development',
                 esModule: _client_,
               },
             },
             {
               loader: 'css-loader',
+              options: {
+                sourceMap: true,
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+              },
             },
           ].filter(Boolean),
         },

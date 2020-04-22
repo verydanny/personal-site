@@ -8,13 +8,15 @@ interface Entry {
   }
 }
 
+const cache = new Map()
+
 export function render(
   app: any,
   publicPath: string,
-  entry: Entry
+  entry: Entry,
+  css?: string[]
 ): express.Handler {
   const entryJs = entry.main.js
-  const entryCss = entry.main.css
   const rendered = app.render()
   const hotUpdateRegex = (file: string): boolean =>
     !/.*\.hot-update.*\.js$/.test(file)
@@ -29,19 +31,9 @@ export function render(
         <!DOCTYPE html>
         <html>
           <head>
-            ${entryCss
-              .filter(hotUpdateRegex)
-              .map(
-                (link) =>
-                  html`
-                    <link
-                      rel="stylesheet"
-                      type="text/css"
-                      href="${publicPath}${link}"
-                    />
-                  `
-              )
-              .join('')}
+            <style type="text/css">
+              ${css ? css.join('') : ''}
+            </style>
             <title>Dingus</title>
           </head>
           <body>

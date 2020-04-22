@@ -7,7 +7,7 @@
   "author": "Daniil Veremchuk <daniel@verydanny.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "PORT=8080 ts-node -T --compiler-options '{\"module\":\"commonjs\"}' bin/development.ts",
+    "dev": "NODE_ENV=development PORT=8080 ts-node -T --compiler-options '{\"module\":\"commonjs\"}' bin/development.ts",
     "prod": "ts-node -T --compiler-options '{\"module\":\"commonjs\"}' bin/production.ts",
     "start": "PORT=8080 ts-node -T --compiler-options '{\"module\":\"commonjs\"}' bin/start.ts",
     "lint": "yarn eslint --ext .jsx,.js,.ts,.tsx src"
@@ -33,6 +33,7 @@
     "node-sass": "^4.13.1",
     "prettier": "^2.0.5",
     "rambda": "^5.1.1",
+    "sass-loader": "^8.0.2",
     "style-loader": "^1.1.4",
     "svelte-loader": "https://github.com/rixo/svelte-loader.git#hmr",
     "svelte-preprocess": "^3.7.3",

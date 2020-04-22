@@ -3,11 +3,4 @@
   const dingus: string = 'hello'
   const someBool: boolean = false
 </script>
-<style type="text/scss">
-  .someClass {
-    color: red;
-    &:hover {
-      color: blue;
-    }
-  }
-</style>
+<style src="./app.scss"></style>
