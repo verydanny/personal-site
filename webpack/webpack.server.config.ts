@@ -16,10 +16,10 @@ export const serverConfig = (env: WebpackConfig): webpack.Configuration => {
       pathinfo: _prod_,
       hotUpdateMainFilename: 'hot-update.json',
       hotUpdateChunkFilename: '[id].hot-update.js',
-      libraryTarget: 'commonjs2'
+      libraryTarget: 'commonjs2',
     },
     resolve: {
-      mainFields: ['svelte', 'main', 'module']
+      mainFields: ['svelte', 'main', 'module'],
     },
     target: 'node',
     module: {
@@ -33,13 +33,13 @@ export const serverConfig = (env: WebpackConfig): webpack.Configuration => {
               loader: 'css-loader',
               options: {
                 modules: true,
-                onlyLocals: true
-              }
-            }
-          ].filter(Boolean)
-        }
-      ]
+                onlyLocals: true,
+              },
+            },
+          ].filter(Boolean),
+        },
+      ],
     },
-    plugins: [_dev_ && new webpack.HotModuleReplacementPlugin()].filter(Boolean)
+    plugins: [],
   } as webpack.Configuration
 }

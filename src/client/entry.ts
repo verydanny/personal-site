@@ -2,7 +2,7 @@ import App from '../app/components/app/app.svelte'
 
 new App({
   target: document.querySelector('.app-container'),
-  hydrate: true
+  hydrate: true,
 })
 
 if (module.hot) {

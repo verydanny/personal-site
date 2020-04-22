@@ -7,6 +7,8 @@ export function render(
   entryString: string[]
 ): express.Handler {
   const rendered = app.render()
+  const hotUpdateRegex = (file: string): boolean =>
+    !/.*\.hot-update.*\.js$/.test(file)
 
   return (
     _req: express.Request,
@@ -18,13 +20,14 @@ export function render(
         <!DOCTYPE html>
         <html>
           <head>
-            <title>Svelte Site</title>
+            <title>Dingus</title>
           </head>
           <body>
             <div class="app-container">${rendered.html}</div>
             ${entryString
+              .filter(hotUpdateRegex)
               .map(
-                script =>
+                (script) =>
                   html`
                     <script
                       type="application/javascript"

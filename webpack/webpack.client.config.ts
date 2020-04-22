@@ -14,7 +14,7 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
     name: target,
     entry: [
       _dev_ && 'webpack-hot-middleware/client',
-      './src/client/entry.ts'
+      './src/client/entry.ts',
     ].filter(Boolean),
     output: {
       path: resolve(path, 'client/'),
@@ -23,10 +23,10 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
       chunkFilename: _prod_ ? '[name].[id].[hash:4].js' : '[name].[id].js',
       pathinfo: _prod_,
       hotUpdateMainFilename: 'hot-update.json',
-      hotUpdateChunkFilename: '[id].hot-update.js'
+      hotUpdateChunkFilename: '[id].hot-update.js',
     },
     resolve: {
-      mainFields: ['svelte', 'browser', 'module', 'main']
+      mainFields: ['svelte', 'browser', 'module', 'main'],
     },
     optimization: {
       removeEmptyChunks: _prod_,
@@ -34,9 +34,9 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
       providedExports: _prod_,
       splitChunks: _prod_
         ? {
-            chunks: 'all'
+            chunks: 'all',
           }
-        : false
+        : false,
     },
     target: 'web' as const,
     module: {
@@ -49,24 +49,23 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
             {
               loader: MiniCssExtractPlugin.loader,
               options: {
-                hmr: mode === 'development'
-              }
+                hmr: mode === 'development',
+              },
             },
             {
               loader: 'css-loader',
               options: {
-                modules: true
-              }
-            }
-          ].filter(Boolean)
-        }
-      ]
+                modules: true,
+              },
+            },
+          ].filter(Boolean),
+        },
+      ],
     },
     plugins: [
-      _dev_ && new webpack.HotModuleReplacementPlugin(),
       _prod_ &&
         new CompressionPlugin({
-          exclude: /\.map$/
+          exclude: /\.map$/,
         }),
       _prod_ && new BundleAnalyzerPlugin(),
       new MiniCssExtractPlugin({
@@ -74,8 +73,8 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
         // all options are optional
         filename: _prod_ ? 'client.[hash].css' : 'client.css',
         chunkFilename: _prod_ ? '[id].[hash].css' : '[id].css',
-        ignoreOrder: false // Enable to remove warnings about conflicting order
-      })
-    ].filter(Boolean)
+        ignoreOrder: false, // Enable to remove warnings about conflicting order
+      }),
+    ].filter(Boolean),
   } as webpack.Configuration
 }

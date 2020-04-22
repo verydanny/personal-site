@@ -43,7 +43,7 @@ app.use('/', express.static('public', { maxAge: 0, etag: false }))
 
 const middleware = universalMiddleware(clientConfigMerged, serverConfigMerged, {
   inMemoryFilesystem: true,
-  hot: true
+  hot: true,
 })
 
 app.use(middleware)
@@ -76,9 +76,9 @@ app.use(
       )
 
       compose(renderer)(req, res, next)
+    } else {
+      next()
     }
-
-    next()
   }
 )
 

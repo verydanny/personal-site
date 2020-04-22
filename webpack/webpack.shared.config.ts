@@ -25,9 +25,9 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
         : 'source-map',
     resolve: {
       alias: {
-        svelte: path.resolve('node_modules', 'svelte')
+        svelte: path.resolve('node_modules', 'svelte'),
       },
-      extensions: ['.mjs', '.js', '.svelte', '.ts']
+      extensions: ['.mjs', '.js', '.svelte', '.ts'],
     },
     module: {
       rules: [
@@ -37,17 +37,16 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
           use: {
             loader: 'svelte-loader',
             options: {
-              hotReload: _client_,
-              emitCss: _client_,
-              hydratable: _client_,
+              emitCss: true,
+              hydratable: true,
               generate: _client_ ? 'dom' : 'ssr',
               preprocess: require('svelte-preprocess')({
                 typescript: {
-                  transpileOnly: true
-                }
-              })
-            }
-          }
+                  transpileOnly: true,
+                },
+              }),
+            },
+          },
         },
         {
           test: /\.tsx?$/,
@@ -57,34 +56,35 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
               loader: 'ts-loader',
               options: {
                 // disable type checker - we will use it in fork plugin
-                transpileOnly: true
-              }
-            }
-          ]
-        }
-      ]
+                transpileOnly: true,
+              },
+            },
+          ],
+        },
+      ],
     },
     optimization: {
       namedChunks: false,
       namedModules: false,
       removeEmptyChunks: _prod_,
       mergeDuplicateChunks: _prod_,
-      providedExports: _prod_
+      providedExports: _prod_,
     },
     plugins: [
+      _dev_ && new webpack.HotModuleReplacementPlugin(),
       _prod_ &&
         new UniversalStatsPlugin({
           env: target,
-          module: false
+          module: false,
         }),
       new webpack.DefinePlugin({
         'process.env': {
           NODE_ENV: _prod_
             ? JSON.stringify('production')
-            : JSON.stringify('development')
-        }
+            : JSON.stringify('development'),
+        },
       }),
-      new CleanWebpackPlugin()
-    ].filter(Boolean)
+      new CleanWebpackPlugin(),
+    ].filter(Boolean),
   } as webpack.Configuration
 }

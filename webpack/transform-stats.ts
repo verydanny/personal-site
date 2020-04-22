@@ -168,7 +168,7 @@ export const buildDevStats = (
           ? compilation.compiler.options.output.publicPath
           : '/',
       statsEnv: env,
-      ...stats
+      ...stats,
     }
   } else {
     return stats
