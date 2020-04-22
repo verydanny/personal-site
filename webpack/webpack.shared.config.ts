@@ -8,7 +8,7 @@ import { UniversalStatsPlugin } from './transform-stats'
 import { WebpackConfig } from '../types/webpack-config'
 
 export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
-  const { mode, target } = env
+  const { mode, target, path: outPath } = env
   const _client_ = target === 'client'
   const _server_ = target === 'server'
   const _prod_ = mode === 'production'
@@ -43,7 +43,7 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
               generate: _client_ ? 'dom' : 'ssr',
               preprocess: autoPreprocess({
                 typescript: {
-                  transpileOnly: _dev_,
+                  transpileOnly: _dev_ || (_prod_ && _server_),
                 },
               }),
             },
@@ -63,7 +63,6 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
           ],
         },
         {
-          // For CSS modules
           test: /\.s?(c|a)?css$/i,
           exclude: /node_modules/,
           use: [
@@ -79,6 +78,14 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
               loader: 'css-loader',
               options: {
                 sourceMap: true,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: true,
+                ident: 'postcss',
+                plugins: (): any[] => [require('cssnano')()],
               },
             },
             {

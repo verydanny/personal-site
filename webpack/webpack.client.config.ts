@@ -1,7 +1,7 @@
 import * as webpack from 'webpack'
 import { resolve } from 'path'
 import CompressionPlugin from 'compression-webpack-plugin'
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { WebpackConfig } from '../types/webpack-config'
 
 export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
@@ -46,7 +46,7 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
         new CompressionPlugin({
           exclude: /\.map$/,
         }),
-      _prod_ && new BundleAnalyzerPlugin(),
+      // _prod_ && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
   } as webpack.Configuration
 }

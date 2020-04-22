@@ -3,4 +3,8 @@
   const dingus: string = 'hello'
   const someBool: boolean = false
 </script>
-<style src="./app.scss"></style>
+<style src="text/scss">
+@import './normalize.scss';
+@import './app.scss';
+
+</style>

@@ -8,17 +8,17 @@ import { serverConfig } from '../webpack/webpack.server.config'
 
 const env = {
   mode: 'production',
-  path: resolve(process.cwd(), 'dist')
+  path: resolve(process.cwd(), 'dist'),
 } as const
 
 const clientEnv = {
   ...env,
-  target: 'client' as const
+  target: 'client' as const,
 }
 
 const serverEnv = {
   ...env,
-  target: 'server' as const
+  target: 'server' as const,
 }
 
 const defaultStatsOptions = {
@@ -31,7 +31,7 @@ const defaultStatsOptions = {
   timings: false,
   version: false,
   builtAt: false,
-  entrypoints: false
+  entrypoints: false,
 }
 
 const clientConfigMerged = webpackMerge.smart(
@@ -67,4 +67,15 @@ compiler
       )
     }
   })
-  .catch(e => console.log(e))
+  .catch((e) => {
+    const stats = e.stats
+
+    if (e || stats.hasErrors()) {
+      console.log(
+        stats.toString({
+          chunks: false,
+          colors: true,
+        })
+      )
+    }
+  })
