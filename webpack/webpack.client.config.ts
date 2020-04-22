@@ -1,6 +1,5 @@
 import * as webpack from 'webpack'
 import { resolve } from 'path'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import CompressionPlugin from 'compression-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { WebpackConfig } from '../types/webpack-config'
@@ -40,27 +39,7 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
     },
     target: 'web' as const,
     module: {
-      rules: [
-        {
-          // For CSS modules
-          test: /\.css$/i,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                hmr: mode === 'development',
-              },
-            },
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-              },
-            },
-          ].filter(Boolean),
-        },
-      ],
+      rules: [],
     },
     plugins: [
       _prod_ &&
@@ -68,13 +47,6 @@ export const clientConfig = (env: WebpackConfig): webpack.Configuration => {
           exclude: /\.map$/,
         }),
       _prod_ && new BundleAnalyzerPlugin(),
-      new MiniCssExtractPlugin({
-        // Options similar to the same options in webpackOptions.output
-        // all options are optional
-        filename: _prod_ ? 'client.[hash].css' : 'client.css',
-        chunkFilename: _prod_ ? '[id].[hash].css' : '[id].css',
-        ignoreOrder: false, // Enable to remove warnings about conflicting order
-      }),
     ].filter(Boolean),
   } as webpack.Configuration
 }

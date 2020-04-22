@@ -72,7 +72,7 @@ app.use(
       const renderer = render(
         res.locals.universal.bundle.default,
         res.locals.clientStats.publicPath,
-        res.locals.clientStats.entry.main.js
+        res.locals.clientStats.entry
       )
 
       compose(renderer)(req, res, next)

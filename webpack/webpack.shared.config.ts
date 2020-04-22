@@ -1,6 +1,7 @@
 import * as webpack from 'webpack'
 import * as path from 'path'
 import autoPreprocess from 'svelte-preprocess'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import { UniversalStatsPlugin } from './transform-stats'
 
@@ -38,8 +39,8 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
           use: {
             loader: 'svelte-loader',
             options: {
-              hotReload: true,
-              emitCss: true,
+              emitCss: _client_,
+              css: true,
               hydratable: true,
               generate: _client_ ? 'dom' : 'ssr',
               preprocess: autoPreprocess({
@@ -63,6 +64,23 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
             },
           ],
         },
+        {
+          // For CSS modules
+          test: /\.css$/i,
+          exclude: /node_modules/,
+          use: [
+            _client_ && {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                hmr: mode === 'development',
+                esModule: _client_,
+              },
+            },
+            {
+              loader: 'css-loader',
+            },
+          ].filter(Boolean),
+        },
       ],
     },
     optimization: {
@@ -73,6 +91,7 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
       providedExports: _prod_,
     },
     plugins: [
+      new CleanWebpackPlugin(),
       _dev_ && new webpack.HotModuleReplacementPlugin(),
       _prod_ &&
         new UniversalStatsPlugin({
@@ -86,7 +105,14 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
             : JSON.stringify('development'),
         },
       }),
-      new CleanWebpackPlugin(),
+      _client_ &&
+        new MiniCssExtractPlugin({
+          // Options similar to the same options in webpackOptions.output
+          // all options are optional
+          filename: _prod_ ? 'client.[hash].css' : 'client.css',
+          chunkFilename: _prod_ ? '[id].[hash].css' : '[id].css',
+          ignoreOrder: false, // Enable to remove warnings about conflicting order
+        }),
     ].filter(Boolean),
   } as webpack.Configuration
 }
