@@ -25,7 +25,7 @@ export function render(
     res: express.Response,
     _next: express.NextFunction
   ): void => {
-    res.send(
+    res.end(
       html`
         <!DOCTYPE html>
         <html>

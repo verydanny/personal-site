@@ -4,7 +4,7 @@ import { resolve } from 'path'
 import webpackMerge from 'webpack-merge'
 import { universalMiddleware } from 'webpack-universal-compiler'
 import { compose } from 'compose-middleware'
-import { render } from './render'
+import { render } from './server/middleware/render'
 import { buildDevStats } from '../webpack/transform-stats'
 
 import { sharedConfig } from '../webpack/webpack.shared.config'

@@ -1,11 +1,12 @@
 import * as webpack from 'webpack'
+import nodeExternals from 'webpack-node-externals'
 import { WebpackConfig } from '../types/webpack-config'
 import { resolve } from 'path'
 
 export const serverConfig = (env: WebpackConfig): webpack.Configuration => {
   const { path, target, mode } = env
-  const _dev_ = mode === 'development'
-  const _prod_ = mode === 'production'
+  const _prodLocal_ = process.env.NODE_ENV === 'production_local'
+  const _prod_ = mode === 'production' && !_prodLocal_
 
   return {
     entry: './src/app/components/app/app.svelte',
@@ -22,23 +23,9 @@ export const serverConfig = (env: WebpackConfig): webpack.Configuration => {
       mainFields: ['svelte', 'main', 'module'],
     },
     target: 'node',
+    externals: [(_prodLocal_ || _prod_) && nodeExternals()].filter(Boolean),
     module: {
-      rules: [
-        {
-          // For CSS modules
-          test: /\.css$/i,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                onlyLocals: true,
-              },
-            },
-          ].filter(Boolean),
-        },
-      ],
+      rules: [],
     },
     plugins: [],
   } as webpack.Configuration

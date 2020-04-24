@@ -1,48 +1,41 @@
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
-import * as fs from 'fs'
 import * as path from 'path'
-import express from 'express'
-import expressGzip from 'express-static-gzip'
 import chalk from 'chalk'
-import { compose } from 'compose-middleware'
 
-import { render } from './render'
-import { cacheCss } from './cacheCss'
 // @ts-ignore
-import bundle from '../dist/server/server'
+import polka from 'polka'
+import serveStatic from 'serve-static'
+import { setupRouter } from './server/router'
 
 const PORT = process.env.PORT
-const app = express()
 
-const clientStats = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, '../dist/client/stats.json'), 'utf-8')
-)
+const start = async (): Promise<void> => {
+  const dir = path.join(__dirname, '../dist/client')
 
-const { publicPath, entry } = clientStats
+  const app = polka()
 
-cacheCss(entry.main.css).then((css) => {
-  const renderer = render(bundle, publicPath, entry, css)
-  app.use(
-    publicPath,
-    expressGzip(path.resolve(__dirname, '../dist/client'), {})
-  )
-  app.use(compose(renderer))
-})
+  app
+    .use('/assets', serveStatic(dir))
+    .get('*', await setupRouter())
+    .listen(8080, (err: Error) => {
+      if (err) throw err
 
-const bottomsep = '═'
-const separator = process.platform !== 'win32' ? '━' : '-'
+      const bottomsep = '═'
+      const separator = process.platform !== 'win32' ? '━' : '-'
 
-app.listen(PORT, () => {
-  const label =
-    chalk.bgCyan.black(' 🌐 SERVER UP ') +
-    chalk.cyan(` http://localhost:${PORT}/`)
+      const label =
+        chalk.bgCyan.black(' 🌐 SERVER UP ') +
+        chalk.cyan(` http://localhost:${PORT}/`)
 
-  console.log(
-    '\n',
-    chalk.dim.bold(`${bottomsep.repeat(50)}`),
-    '\n',
-    label,
-    '\n',
-    chalk.dim(`${separator.repeat(50)}\n`)
-  )
-})
+      console.log(
+        '\n',
+        chalk.dim.bold(`${bottomsep.repeat(50)}`),
+        '\n',
+        label,
+        '\n',
+        chalk.dim(`${separator.repeat(50)}\n`)
+      )
+    })
+}
+
+start()

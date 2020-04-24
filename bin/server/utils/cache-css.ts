@@ -25,17 +25,19 @@ export function cacheCss(cssPaths: string[], res?: Response): Promise<any> {
       return new Promise((res, rej) => {
         const cacheKey = `./dist/client/${file}`
 
-        fs.readFile(cacheKey, (err, data) => {
-          if (!err) {
-            if (!cssCache.has(cacheKey)) {
+        if (!cssCache.has(cacheKey)) {
+          fs.readFile(cacheKey, (err, data) => {
+            if (!err) {
               cssCache.set(cacheKey, data.toString())
+
+              return res()
             }
 
-            return res()
-          }
-
-          return rej()
-        })
+            return rej()
+          })
+        } else {
+          return res()
+        }
       })
     }
   })

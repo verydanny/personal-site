@@ -8,11 +8,12 @@ import { UniversalStatsPlugin } from './transform-stats'
 import { WebpackConfig } from '../types/webpack-config'
 
 export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
-  const { mode, target, path: outPath } = env
+  const { mode, target } = env
   const _client_ = target === 'client'
   const _server_ = target === 'server'
-  const _prod_ = mode === 'production'
   const _dev_ = mode === 'development'
+  const _prodLocal_ = process.env.NODE_ENV === 'production_local'
+  const _prod_ = mode === 'production' && !_prodLocal_
 
   return {
     name: target,
@@ -43,7 +44,7 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
               generate: _client_ ? 'dom' : 'ssr',
               preprocess: autoPreprocess({
                 typescript: {
-                  transpileOnly: _dev_ || (_prod_ && _server_),
+                  transpileOnly: _dev_ || _prodLocal_,
                 },
               }),
             },
@@ -56,8 +57,7 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
             {
               loader: 'ts-loader',
               options: {
-                // disable type checker - we will use it in fork plugin
-                transpileOnly: true,
+                transpileOnly: _dev_ || _prodLocal_,
               },
             },
           ],
@@ -80,7 +80,7 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
                 sourceMap: _dev_,
               },
             },
-            {
+            _prod_ && {
               loader: 'postcss-loader',
               options: {
                 sourceMap: _dev_,
@@ -104,15 +104,10 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
       removeEmptyChunks: _prod_,
       mergeDuplicateChunks: _prod_,
       providedExports: _prod_,
+      minimize: _prod_,
     },
     plugins: [
       new CleanWebpackPlugin(),
-      _dev_ && new webpack.HotModuleReplacementPlugin(),
-      _prod_ &&
-        new UniversalStatsPlugin({
-          env: target,
-          module: false,
-        }),
       new webpack.DefinePlugin({
         'process.env': {
           NODE_ENV: _prod_
@@ -120,6 +115,7 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
             : JSON.stringify('development'),
         },
       }),
+      _dev_ && new webpack.HotModuleReplacementPlugin(),
       _client_ &&
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
@@ -127,6 +123,11 @@ export const sharedConfig = (env: WebpackConfig): webpack.Configuration => {
           filename: _prod_ ? 'client.[hash].css' : 'client.css',
           chunkFilename: _prod_ ? '[id].[hash].css' : '[id].css',
           ignoreOrder: false, // Enable to remove warnings about conflicting order
+        }),
+      (_prod_ || _prodLocal_) &&
+        new UniversalStatsPlugin({
+          env: target,
+          module: false,
         }),
     ].filter(Boolean),
   } as webpack.Configuration
